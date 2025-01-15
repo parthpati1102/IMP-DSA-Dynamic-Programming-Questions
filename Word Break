@@ -1,0 +1,45 @@
+
+//Using 1D DP
+class Solution {
+public:
+    bool checkDict(string &str , vector<string>& wordDict){
+        for(auto pr : wordDict){
+            if(pr == str){
+                return true;
+            }
+        }
+
+        return false;
+    }
+    bool solve(string &s , vector<string>& wordDict , int start , vector<int> &dp){
+        if(start >= s.size()){
+            return true;
+        }
+
+        if(dp[start] != -1){
+            return dp[start];
+        }
+        bool check = false;
+        string str = "";
+
+        for(int i  = start ; i < s.size() ; i++){
+            str += s[i];
+            
+            if(checkDict(str , wordDict)){
+                check =  check || solve(s , wordDict , i + 1 , dp);
+            }
+        }
+        
+        dp[start] = check;
+
+        return dp[start];
+    }
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int  n = s.size();
+
+        vector<int> dp(n + 1 , -1);
+        bool ans = solve(s , wordDict , 0  , dp);
+
+        return ans;
+    }
+};
