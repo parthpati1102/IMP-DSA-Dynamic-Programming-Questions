@@ -1,0 +1,80 @@
+//Using Recurssion
+class Solution {
+  public:
+    int solve(int capacity , vector<int> &val , vector<int> &wt , int index){
+        if(index == val.size() - 1){
+            if(wt[index] <= capacity){
+                return val[index];
+            }
+            else{
+                return 0;
+            }
+        }
+        
+        int option1 = 0;
+        
+        if(wt[index] <= capacity){
+          option1 = val[index] + solve(capacity - wt[index] , val , wt , index + 1);
+        }
+        
+        int option2 = solve(capacity , val , wt , index + 1);
+        
+        int ans = max(option1 , option2);
+        
+        return ans;
+    }
+    int knapSack(int capacity, vector<int> &val, vector<int> &wt) {
+        // code here
+        
+        int ans = solve(capacity , val , wt , 0);
+        
+        return ans;
+    }
+};
+
+
+
+
+
+//Using 2D Dynamic Programming
+class Solution {
+  public:
+    int solve(int capacity , vector<int> &val , vector<int> &wt , int index , vector<vector<int>> &dp){
+        if(index == val.size() - 1){
+            if(wt[index] <= capacity){
+                return val[index];
+            }
+            else{
+                return 0;
+            }
+        }
+        
+        if(dp[capacity][index] != -1){
+            return dp[capacity][index];
+        }
+        int option1 = 0;
+        
+        if(wt[index] <= capacity){
+          option1 = val[index] + solve(capacity - wt[index] , val , wt , index + 1 , dp);
+        }
+        
+        int option2 = solve(capacity , val , wt , index + 1 , dp);
+        
+        int ans = max(option1 , option2);
+        
+        dp[capacity][index] = ans;
+        
+        return dp[capacity][index];
+    }
+
+    int knapSack(int capacity, vector<int> &val, vector<int> &wt) {
+        // code here
+        int n = val.size();
+        
+        vector<vector<int>> dp(capacity + 1 , vector<int>(n + 1 , -1));
+        
+        int ans = solve(capacity , val , wt , 0 , dp);
+        
+        return ans;
+    }
+};
