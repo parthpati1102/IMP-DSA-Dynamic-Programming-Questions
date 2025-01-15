@@ -2,15 +2,9 @@
 class Solution {
   public:
     int solve(int capacity , vector<int> &val , vector<int> &wt , int index){
-        if(index == val.size() - 1){
-            if(wt[index] <= capacity){
-                return val[index];
-            }
-            else{
-                return 0;
-            }
+        if(index >= val.size()){
+            return 0;
         }
-        
         int option1 = 0;
         
         if(wt[index] <= capacity){
