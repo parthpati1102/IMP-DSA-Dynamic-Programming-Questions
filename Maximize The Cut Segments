@@ -1,0 +1,51 @@
+class Solution {
+  public:
+    // Function to find the maximum number of cuts.
+    // int usingRecurssion(int n , int x , int y , int z){
+    //     if(n == 0) return 0;
+        
+    //     if(n < 0) return INT_MIN;
+        
+    //     int option1 = 1 + usingRecurssion(n - x , x , y , z);
+    //     int option2 = 1 + usingRecurssion(n - y , x , y , z);
+    //     int option3 = 1 + usingRecurssion(n - z , x , y , z);
+        
+    //     int ans = max(option1 , max(option2 , option3));
+        
+    //     return ans;
+    // }
+    
+    int Memoization(int n , int x , int y , int z , vector<int> &dp){
+        if(n == 0) return 0;
+        
+        if(n < 0) return INT_MIN;
+        
+        if(dp[n] != INT_MIN){
+            return dp[n];
+        }
+        
+        int option1 = 1 + Memoization(n - x , x , y , z , dp);
+        int option2 = 1 + Memoization(n - y , x , y , z , dp);
+        int option3 = 1 + Memoization(n - z , x , y , z , dp);
+        
+        int ans = max(option1 , max(option2 , option3));
+        
+        dp[n] = ans;
+        
+        return dp[n];
+    }
+    int maximizeTheCuts(int n, int x, int y, int z) {
+        // Your code here
+        // int ans = usingRecurssion(n , x , y , z);
+        
+        vector<int> dp(n + 1 , INT_MIN);
+        
+        int ans = Memoization(n , x , y , z , dp);
+        
+        if(ans < 0){
+            return 0;
+        }
+        
+        return ans;
+    }
+};
