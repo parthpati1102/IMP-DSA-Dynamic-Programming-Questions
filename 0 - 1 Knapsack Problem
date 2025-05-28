@@ -72,3 +72,40 @@ class Solution {
         return ans;
     }
 };
+
+//Using Tabulation
+class Solution {
+  public:
+    
+    int Tabulation(int W , vector<int> &val , vector<int> &wt){
+        
+        int n = val.size();
+        
+        vector<vector<int>> dp(W + 1 , vector<int> (n + 1 , 0));
+        
+        
+        for(int i = 0 ; i <= W ; i++){
+            for(int j = n - 1 ; j >= 0 ; j--){
+                int option1 = 0;
+                 
+                if(i - wt[j] >= 0){
+                    option1 = val[j] + dp[i - wt[j]][j + 1];
+                }
+                
+                int option2 = dp[i][j + 1];
+                
+                int ans = max(option1 , option2);
+                
+                dp[i][j] = ans;
+            }
+        }
+        
+        return dp[W][0];
+    }
+    int knapsack(int W, vector<int> &val, vector<int> &wt) {
+        
+        int ans = Tabulation(W , val , wt);
+         
+        return ans;
+    }
+};
