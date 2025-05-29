@@ -1,0 +1,62 @@
+//This Question is Same as the Longest Common Subsequence 
+//the only thing we do in this is that we make the copy of the given string and then reverse so now we have two string so now we can apply the same logic we applied in the
+Longest Common Subsequence
+
+class Solution {
+public:
+    // int usingRecurssion(string &s , string &str , int index1 , int index2){
+    //     if(index1 >= s.size() || index2 >= str.size()){
+    //         return 0;
+    //     }
+
+    //     int ans  = 0;
+
+    //     if(s[index1] == str[index2]){
+    //         ans = 1 + usingRecurssion(s , str , index1 + 1 , index2 + 1);
+    //     }
+
+    //     else{
+    //         ans = max(usingRecurssion(s , str , index1 + 1 , index2) , usingRecurssion(s, str , index1 , index2 + 1));
+    //     }
+
+    //     return ans;
+    // }
+
+    int Memoization(string &s , string &str , int index1 , int index2 ,  vector<vector<int>> &dp){
+        if(index1 >= s.size() || index2 >= str.size()){
+            return 0;
+        }
+        
+        if(dp[index1][index2] != -1){
+            return dp[index1][index2];
+        }
+
+        int ans  = 0;
+
+        if(s[index1] == str[index2]){
+            ans = 1 + Memoization(s , str , index1 + 1 , index2 + 1 , dp);
+        }
+
+        else{
+            ans = max(Memoization(s , str , index1 + 1 , index2 , dp) , Memoization(s, str , index1 , index2 + 1 , dp));
+        }
+        
+        dp[index1][index2] = ans;
+        return dp[index1][index2];
+    }
+
+    int longestPalindromeSubseq(string s) {
+        string str = s;
+        reverse(str.begin() , str.end());
+
+        // int ans = usingRecurssion(s , str , 0 , 0);
+
+        int n = s.size();
+
+        vector<vector<int>> dp(n + 1 , vector<int> (n + 1 , -1));
+
+        int ans = Memoization(s , str , 0 , 0 , dp);
+
+        return ans;
+    }
+};
