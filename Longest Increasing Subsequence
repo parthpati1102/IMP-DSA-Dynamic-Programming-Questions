@@ -1,0 +1,85 @@
+///IMP IMP IMP IMP this is the one of the famous pattern we use in the dp
+//In this Question we also learn about the index shifting concept
+//like here we start prev = -1 but when we make dp array we cant have access of -1 index ao here we learn about the new concept which is called Index Shifting 
+
+class Solution {
+public:
+   int usingRecurssion(vector<int> & nums , int prev , int curr){
+      if(curr >= nums.size()){
+         return 0;
+      }
+      
+      int option1 = 0;
+
+      if(prev == -1 || nums[curr] > nums[prev]){
+          option1 = 1 + usingRecurssion(nums , curr , curr + 1);
+      }
+
+      int option2 = usingRecurssion(nums , prev , curr + 1);
+
+      int ans = max(option1 , option2);
+
+      return ans;
+   }
+
+   int Memoization(vector<int> & nums , int prev , int curr , vector<vector<int>> &dp){
+      if(curr >= nums.size()){
+         return 0;
+      }
+      
+      if(dp[prev + 1][curr] != -1){
+         return dp[prev + 1][curr];
+      }
+
+      int option1 = 0;
+
+      if(prev == -1 || nums[curr] > nums[prev]){
+          option1 = 1 + Memoization(nums , curr , curr + 1 , dp);
+      }
+
+      int option2 = Memoization(nums , prev , curr + 1 , dp);
+      
+      int ans = max(option1 , option2);
+      
+      dp[prev + 1][curr] = ans;
+
+      return dp[prev + 1][curr];
+   }
+
+   int Tabulation(vector<int>& nums){
+       int n = nums.size();
+       vector<vector<int>> dp(n + 1 , vector<int> (n + 1 , 0));
+
+      for(int i = n - 1 ; i >= 0 ; i--){
+         for(int j = i - 1 ; j >= -1 ; j--){
+                int option1 = 0;
+
+                if(j == -1 || nums[i] > nums[j]){
+                    option1 = 1 + dp[i + 1][i + 1];
+                }
+
+                int option2 = dp[j + 1][i + 1];
+                
+                int ans = max(option1 , option2);
+                
+                dp[j + 1][i] = ans;
+            }
+        }
+
+        return dp[0][0];
+    }
+
+    int lengthOfLIS(vector<int>& nums) {
+        // int ans = usingRecurssion(nums,  -1 , 0);
+        
+        // int n = nums.size();
+
+        // vector<vector<int>> dp(n + 1 , vector<int> (n + 1 , -1));
+
+        // int ans = Memoization(nums , - 1 , 0 , dp);
+
+        int ans = Tabulation(nums);
+
+        return ans;
+    }
+};
