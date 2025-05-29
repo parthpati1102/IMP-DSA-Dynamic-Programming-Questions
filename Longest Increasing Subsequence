@@ -1,6 +1,6 @@
 ///IMP IMP IMP IMP this is the one of the famous pattern we use in the dp
 //In this Question we also learn about the index shifting concept
-//like here we start prev = -1 but when we make dp array we cant have access of -1 index ao here we learn about the new concept which is called Index Shifting 
+//like here we start prev = -1 but when we make dp array we can't have access of -1 index so here we learn about the new concept which is called Index Shifting.
 
 class Solution {
 public:
