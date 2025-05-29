@@ -1,0 +1,67 @@
+class Solution {
+public:
+    bool check(vector<int> &curr , vector<int> &prev){
+        if(curr[0] >= prev[0] && curr[1] >= prev[1] && curr[2] >= prev[2]){
+            return true;
+        }
+
+        return false;
+    }
+    int usingRecurssion(vector<vector<int>>& cuboids , int curr , int prev){
+        if(curr >= cuboids.size()){
+            return 0;
+        }
+
+        int option1 = 0;
+
+        if(prev == - 1 || check(cuboids[curr] , cuboids[prev])){
+             option1 = cuboids[curr][2] + usingRecurssion(cuboids , curr + 1, curr);
+        }
+
+        int option2 = usingRecurssion(cuboids , curr + 1 , prev);
+
+        int ans = max(option1 , option2);
+
+        return ans;
+    }
+
+    int Memoization(vector<vector<int>>& cuboids , int curr , int prev , vector<vector<int>> &dp){
+        if(curr >= cuboids.size()){
+            return 0;
+        }
+
+        int option1 = 0;
+
+        if(dp[curr][prev + 1] != -1){
+            return dp[curr][prev + 1];
+        }
+
+        if(prev == - 1 || check(cuboids[curr] , cuboids[prev])){
+             option1 = cuboids[curr][2] + Memoization(cuboids , curr + 1, curr , dp);
+        }
+
+        int option2 = Memoization(cuboids , curr + 1 , prev , dp);
+
+        int ans = max(option1 , option2);
+        
+        dp[curr][prev + 1] = ans;
+
+        return dp[curr][prev + 1];
+    }
+    int maxHeight(vector<vector<int>>& cuboids) {
+        int row = cuboids.size();
+
+        for(int i = 0 ; i < row ; i++){
+            sort(cuboids[i].begin() , cuboids[i].end());
+        }
+        
+        sort(cuboids.begin() , cuboids.end());
+        
+        // int ans = usingRecurssion(cuboids , 0 , -1);
+        
+        vector<vector<int>> dp(row + 1 , vector<int>(row + 1 , -1));
+        int ans = Memoization(cuboids , 0 , -1, dp);
+        
+        return ans;
+    }
+};
