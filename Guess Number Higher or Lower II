@@ -1,0 +1,51 @@
+//Here we learn about the new Pattern which is called an Merge Interval Pattern 
+//Basically we can solve question using this pattern which consist of range like 1 to n.
+
+//In this question we fill first find the maximum for every answer and then we finally find the minimum from all the maximums
+
+class Solution {
+public:
+    int usingRecurssion(int start, int end) {
+        if (start >= end) {
+            return 0;
+        }
+
+        int ans = INT_MAX;
+
+        for (int i = start; i <= end; i++) {
+            ans = min(ans, i + max(usingRecurssion(start, i - 1), usingRecurssion(i + 1, end)));
+        }
+
+        return ans;
+    }
+
+    int Memoization(int start, int end , vector<vector<int>> &dp) {
+        if (start >= end) {
+            return 0;
+        }
+        
+        if(dp[start][end] != -1){
+            return dp[start][end];
+        }
+
+        int ans = INT_MAX;
+
+        for (int i = start; i <= end; i++) {
+            ans = min(ans, i + max(Memoization(start, i - 1 , dp), Memoization(i + 1, end , dp)));
+        }
+         
+        dp[start][end] = ans;
+
+        return dp[start][end];
+    }
+
+    int getMoneyAmount(int n) {
+        // int ans = usingRecurssion(1, n);
+
+        vector<vector<int>> dp(n + 1 , vector<int> (n + 1 , -1));
+
+        int ans = Memoization(1 , n , dp);
+
+        return ans;
+    }
+};
