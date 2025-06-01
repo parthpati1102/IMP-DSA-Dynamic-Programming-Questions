@@ -1,0 +1,67 @@
+#define MOD 1000000007
+class Solution {
+public:
+    int usingRecurssion(int n , int k , int target , vector<vector<int>> &dp){
+        if(target == 0 && n == 0){
+            return 1;
+        }
+         
+        if(target != 0 && n == 0){
+            return 0;
+        }
+
+        if(target == 0 && n != 0){
+            return 0;
+        }
+        
+        if(dp[n][target] != -1){
+            return dp[n][target];
+        }
+        
+        int ans = 0;
+        for(int i = 1 ; i <= k ; i++){
+
+           if(target - i >= 0){
+             ans = ((ans  %  MOD) + (usingRecurssion(n - 1 , k  , target - i , dp)) % MOD ) % MOD;
+           }
+           
+        }
+         
+        dp[n][target] = ans % MOD;
+
+        return dp[n][target];
+    }
+
+    int Tabulation(int n , int k , int target){
+        vector<vector<int>> dp(n + 1 , vector<int> (target + 1 , 0));
+
+        dp[0][0] = 1;
+
+        for(int j = 1 ; j <= n ; j++){
+            for(int m = 1 ; m <= target ; m++){
+                int ans = 0;
+                for(int i = 1 ; i <= k ; i++){
+
+                    if(m - i >= 0){
+                        ans = ((ans  %  MOD) + (dp[j - 1][m - i]) % MOD ) % MOD;
+                    }
+                
+                }
+             
+                dp[j][m] = ans % MOD;
+            }
+        }
+
+        return dp[n][target];
+    }
+    int numRollsToTarget(int n, int k, int target) {
+
+        vector<vector<int>> dp(n + 1 , vector<int> (target + 1 , -1));
+
+        // int ans = usingRecurssion(n , k , target , dp);
+
+        int ans = Tabulation(n , k , target);
+
+        return ans;
+    }
+};
