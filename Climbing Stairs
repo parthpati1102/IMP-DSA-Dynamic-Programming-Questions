@@ -1,0 +1,52 @@
+class Solution {
+public:
+    int usingRecurssion(int n){
+        if(n == 0 || n == 1){
+           return 1;
+        }
+
+        int ans = usingRecurssion(n - 1) + usingRecurssion(n - 2);
+
+        return ans;
+    }
+
+    int Memoization(int n , vector<int> &dp){
+        if(n == 0 || n == 1){
+           return 1;
+        }
+
+        if(dp[n] != -1){
+            return dp[n];
+        }
+
+        int ans = Memoization(n - 1 , dp) + Memoization(n - 2 , dp);
+
+        dp[n] = ans;
+
+        return dp[n];
+    }
+
+    int Tabulation(int n){
+        vector<int> dp(n + 1 , 1);
+
+        for(int i = 2 ; i <=n ; i++){
+            int ans = dp[i - 1] + dp[i - 2];
+
+            dp[i] = ans;
+        }
+
+        return dp[n];
+    }
+    int climbStairs(int n) {
+
+        // int ans = usingRecurssion(n);
+        
+        // vector<int> dp(n + 1 , -1);
+
+        // int ans = Memoization(n , dp);
+
+        int ans = Tabulation(n);
+
+        return ans;
+    }
+};
