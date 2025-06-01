@@ -1,0 +1,105 @@
+class Solution {
+public: 
+    bool usingRecurssion(vector<int> &nums , int index , int target){
+        
+        if(index >= nums.size()){
+            return false;
+        }
+
+        if(target < 0){
+            return false;
+        }
+
+        if(target == 0){
+            return true;
+        }
+
+        bool option1 = usingRecurssion(nums , index + 1 , target - nums[index]);
+
+        bool option2 = usingRecurssion(nums , index + 1 , target);
+
+        bool ans = option1 || option2;
+
+        return ans;
+    }
+
+    bool Memoization(vector<int> &nums , int index , int target, vector<vector<int>> &dp){
+        
+        if(index >= nums.size()){
+            return false;
+        }
+
+        if(target < 0){
+            return false;
+        }
+
+        if(target == 0){
+            return true;
+        }
+
+        if(dp[index][target] != -1){
+            return dp[index][target];
+        }
+
+        bool option1 = Memoization(nums , index + 1 , target - nums[index] , dp);
+
+        bool option2 = Memoization(nums , index + 1 , target , dp);
+
+        bool ans = option1 || option2;
+        
+        dp[index][target] = ans;
+
+        return dp[index][target];
+    }
+
+    bool Tabulation(vector<int> &nums , int target){
+        int n = nums.size();
+
+        vector<vector<int>> dp( n + 1 , vector<int> (target + 1 , 0));
+
+        for(int i = 0 ; i <= n ; i++){
+            dp[i][0] = 1;
+        }
+
+        for(int i = n - 1; i>=0 ; i--){
+            for(int j = 0 ; j <= target ; j++){
+                bool option1 = 0;
+                
+                if(j >= nums[i]){
+                   option1 = dp[i + 1][j - nums[i]];
+                }
+                
+
+                bool option2 = dp[i + 1][j];
+
+                bool ans = option1 || option2;
+                
+                dp[i][j] = ans;
+            }
+        }
+
+        return dp[0][target];
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int sum = accumulate(nums.begin() , nums.end() , 0);
+
+        if(sum % 2 != 0){
+            return false;
+        }
+
+        int target = sum / 2;
+
+        // bool ans = usingRecurssion(nums , 0 , target);
+
+        // int n = nums.size();
+
+        // vector<vector<int>> dp( n + 1 , vector<int> (target + 1 , -1));
+
+        // bool ans = Memoization(nums , 0 , target , dp);
+
+        bool ans = Tabulation(nums , target);
+
+        return ans;
+    }
+};
