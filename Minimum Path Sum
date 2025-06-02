@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int usingRecurssion(vector<vector<int>>& grid , int right , int down , int row , int col){
+        if(right >= row || down >= col){
+            return INT_MAX;
+        }
+
+        if(right == row - 1 && down == col - 1){
+            return grid[right][down];
+        }
+
+        int option1 = usingRecurssion(grid , right + 1 , down , row , col);
+        int option2 = usingRecurssion(grid , right , down + 1 , row , col);
+
+        int ans = grid[right][down] + min(option1 , option2);
+
+        return ans;
+    }
+
+    int Memoization(vector<vector<int>>& grid , int right , int down , int row , int col, vector<vector<int>> &dp){
+        if(right >= row || down >= col){
+            return INT_MAX;
+        }
+
+        if(right == row - 1 && down == col - 1){
+            return grid[right][down];
+        }
+
+        if(dp[right][down] != -1){
+            return dp[right][down];
+        }
+
+        int option1 = Memoization(grid , right + 1 , down , row , col , dp);
+        int option2 = Memoization(grid , right , down + 1 , row , col , dp);
+        
+        int ans = grid[right][down] + min(option1 , option2);
+        
+        dp[right][down] = ans;
+        
+        return dp[right][down];
+    }
+
+    int minPathSum(vector<vector<int>>& grid) {
+        int row = grid.size();
+        int col = grid[0].size();
+
+        // int ans = usingRecurssion(grid , 0 , 0 , row , col);
+
+        vector<vector<int>> dp(row + 1 , vector<int>(col + 1 , -1));
+
+        int ans = Memoization(grid , 0 , 0 , row , col , dp);
+
+        return ans;
+    }
+};
