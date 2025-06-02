@@ -1,0 +1,80 @@
+class Solution {
+public:
+    int usingRecurssion(int right , int down , int m , int n){
+          if(right >= m || down >= n){
+             return 0;
+          }
+
+          if(right == m - 1 && down == n - 1){
+             return 1;
+          }
+
+          int option1 = usingRecurssion(right + 1 , down , m , n);
+          int option2 = usingRecurssion(right , down + 1 , m , n);
+
+          int count = option1 + option2;
+
+          return count;
+    }
+
+    int Memoization(int right , int down , int m , int n , vector<vector<int>> &dp){
+          if(right >= m || down >= n){
+             return 0;
+          }
+
+          if(right == m - 1 && down == n - 1){
+             return 1;
+          }
+
+          if(dp[right][down] != -1){
+             return dp[right][down];
+          }
+
+          int option1 = Memoization(right + 1 , down , m , n , dp);
+          int option2 = Memoization(right , down + 1 , m , n , dp);
+
+          int count = option1 + option2;
+
+          dp[right][down] = count;
+
+          return dp[right][down];
+    }
+    
+    int Tabulation(int m , int n){
+        vector<vector<int>> dp(m + 1 , vector<int> (n + 1 , 0));
+
+        dp[m-1][n - 1] = 1;
+
+        for (int j = 0; j < n-1; j++) {
+            dp[m-1][j] = 1;
+        }
+        
+        for (int i = 0; i < m-1; i++) {
+            dp[i][n-1] = 1;
+        }
+
+        for(int i = m - 2 ; i >= 0 ; i--){
+            for(int j = n - 2 ; j >= 0 ; j--){
+                int option1 = dp[i + 1][j];
+                int option2 = dp[i][j + 1];
+
+                int count = option1 + option2;
+
+                dp[i][j] = count;
+            }
+        }
+        
+        return dp[0][0];
+    } 
+    int uniquePaths(int m, int n) {
+        // // int ans = usingRecurssion(0 , 0 , m , n);
+
+        //  vector<vector<int>> dp(m + 1 , vector<int> (n + 1 , -1));
+
+        //  int ans = Memoization(0 , 0 , m , n , dp);
+
+        int ans = Tabulation(m , n);
+
+        return ans;
+    }
+};
