@@ -1,0 +1,65 @@
+class Solution {
+public:
+    int usingRecurssion(vector<vector<int>> &obstacleGrid , int right , int down , int row , int col){
+        if(right >= row || down >= col){
+            return 0;
+        }
+
+        if(obstacleGrid[right][down] == 1){
+            return 0;
+        }
+
+        if(right == row - 1 && down == col - 1){
+            return 1;
+        }
+
+        int option1 = usingRecurssion(obstacleGrid , right + 1 , down , row , col);
+
+        int option2 = usingRecurssion(obstacleGrid , right , down + 1 , row , col);
+
+        int count = option1 + option2;
+
+        return count;
+    }
+
+    int Memoization(vector<vector<int>> &obstacleGrid , int right , int down , int row , int col ,  vector<vector<int>> &dp){
+        if(right >= row || down >= col){
+            return 0;
+        }
+
+        if(obstacleGrid[right][down] == 1){
+            return 0;
+        }
+
+        if(right == row - 1 && down == col - 1){
+            return 1;
+        }
+
+        if(dp[right][down] != -1){
+            return dp[right][down];
+        }
+
+        int option1 = Memoization(obstacleGrid , right + 1 , down , row , col , dp);
+
+        int option2 = Memoization(obstacleGrid , right , down + 1 , row , col , dp);
+
+        int count = option1 + option2;
+         
+        dp[right][down] = count;
+
+        return dp[right][down];
+    }
+
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid){
+        int row = obstacleGrid.size();
+        int col = obstacleGrid[0].size();
+
+        // int ans = usingRecurssion(obstacleGrid , 0 , 0 , row , col);
+
+        vector<vector<int>> dp(row + 1 , vector<int>(col + 1 , -1));
+
+        int ans = Memoization(obstacleGrid , 0 , 0 , row , col , dp);
+
+        return ans;
+    }
+};
