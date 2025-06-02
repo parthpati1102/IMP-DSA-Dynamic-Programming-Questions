@@ -1,0 +1,60 @@
+class Solution {
+public:
+    int usingRecurssion(vector<int> &heights , int k , int index){
+        if(index == 0){
+            return 0;
+        }
+
+        int option1 = INT_MAX;
+
+        int ans = INT_MAX;
+
+        for(int i = 1 ; i <=k ; i++){
+
+            if(index - i >= 0){
+              option1 = usingRecurssion(heights , k , index - i) + abs(heights[index] - heights[index - i]);
+            }
+            
+
+            ans = min(ans , option1);
+        }
+
+        return ans;
+    }
+
+    int Memoization(vector<int> &heights , int k , int index , vector<int> &dp){
+        if(index == 0){
+            return 0;
+        }
+
+        if(dp[index] != -1){
+            return dp[index];
+        }
+
+        int option1 = INT_MAX;
+
+        int ans = INT_MAX;
+
+        for(int i = 1 ; i <=k ; i++){
+
+            if(index - i >= 0){
+              option1 = usingRecurssion(heights , k , index - i , dp) + abs(heights[index] - heights[index - i]);
+            }
+            
+            ans = min(ans , option1);
+        }
+        
+        dp[index] = ans;
+
+        return dp[index];
+    }
+    int frogJump(vector<int>& heights, int k) {
+        // int ans = usingRecurssion(heights , k , heights.size() - 1);
+
+        int n = heights.size();
+        vector<int> dp(n + 1 , -1);
+        int ans = Memoization(heights , k , heights.size() - 1 , dp);
+
+        return ans;
+    }
+};
