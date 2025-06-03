@@ -1,0 +1,100 @@
+class Solution {
+  public:
+    int usingRecurssion(vector<int> &arr , int index , int target){
+        if(index >= arr.size() && target != 0){
+            return 0;
+        }
+        
+
+        if(target == 0 && index >= arr.size()){
+            return 1;
+        }
+        
+        int option1 = 0;
+        
+        if(target - arr[index] >= 0){
+          option1 = usingRecurssion(arr , index + 1 , target - arr[index]);
+        }
+        
+        
+        int option2 = usingRecurssion(arr , index + 1 , target);
+        
+        int ans = option1 + option2;
+        
+        return ans;
+    }
+    
+    int Memoization(vector<int> &arr , int index , int target , vector<vector<int>> &dp){
+        if(index >= arr.size() && target != 0){
+            return 0;
+        }
+        
+
+        if(target == 0 && index >= arr.size()){
+            return 1;
+        }
+        
+        if(dp[index][target] != -1){
+            return dp[index][target];
+        }
+ 
+        int option1 = 0;
+        
+        if(target - arr[index] >= 0){
+          option1 = Memoization(arr , index + 1 , target - arr[index] , dp);
+        }
+        
+        
+        int option2 = Memoization(arr , index + 1 , target , dp);
+        
+        int ans = option1 + option2;
+        
+        dp[index][target] = ans;
+        
+        return dp[index][target];
+    }
+    
+    int Tabulation(vector<int> &arr , int target){
+        int n = arr.size();
+        
+        vector<vector<int>> dp(n + 1 , vector<int>(target + 1 , 0));
+        
+        for(int i = 0 ; i <= n ; i++){
+            dp[i][0] = 1;
+        }
+        
+        for(int i = n - 1 ; i >= 0 ; i--){
+            for(int j = 0 ; j <= target ; j++){
+                int option1 = 0;
+        
+                if(j - arr[i] >= 0){
+                  option1 = dp[i + 1][j - arr[i]];
+                }
+                
+                
+                int option2 = dp[i + 1][j];
+                
+                int ans = option1 + option2;
+                
+                dp[i][j] = ans;
+            }
+        }
+        
+        return dp[0][target];
+    }
+    
+    int perfectSum(vector<int>& arr, int target) {
+        // code here
+        // int ans = usingRecurssion(arr, 0 , target);
+        
+        // int n = arr.size();
+        
+        // vector<vector<int>> dp(n + 1 , vector<int>(target + 1 , -1));
+        
+        // int ans = Memoization(arr, 0 , target , dp);
+        
+        int ans = Tabulation(arr , target);
+        
+        return ans;
+    }
+};
