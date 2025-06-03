@@ -1,0 +1,96 @@
+class Solution {
+  public:
+    bool usingRecurssion(vector<int>& arr , int sum , int index){
+        if(index >= arr.size() && sum != 0){
+            return false;
+        }
+        
+        if(sum < 0){
+            return false;
+        }
+        
+        if(sum == 0){
+            return true;
+        }
+        
+        int option1 = usingRecurssion(arr , sum - arr[index] , index + 1);
+        
+        int option2 = usingRecurssion(arr , sum , index + 1);
+        
+        int ans = option1 || option2;
+        
+        return ans;
+    }
+    
+    bool Memoization(vector<int>& arr , int index , int sum , vector<vector<int>> &dp){
+        if(index >= arr.size() && sum != 0){
+            return false;
+        }
+        
+        if(sum < 0){
+            return false;
+        }
+        
+        if(sum == 0){
+            return true;
+        }
+        
+        if(dp[index][sum] != -1){
+            return dp[index][sum];
+        }
+        
+        bool option1 = Memoization(arr , index + 1 , sum - arr[index] , dp);
+        
+        bool option2 = Memoization(arr , index + 1 , sum , dp);
+        
+        bool ans = option1 || option2;
+        
+        dp[index][sum] = ans;
+        
+        return dp[index][sum];
+    }
+    
+    bool Tabulation(vector<int>& arr , int sum){
+        int n = arr.size();
+        
+        vector<vector<int>> dp(n + 1, vector<int> (sum + 1 , 0));
+        
+        for(int i = 0 ; i <= n ; i++){
+            dp[i][0] = 1;
+        }
+        
+        for(int i = n - 1 ; i >= 0 ; i--){
+            for(int j = 1 ; j <= sum ; j++){
+                int option1 = 0;
+                
+                if(j - arr[i] >= 0){
+                  option1 = dp[i + 1][j - arr[i]];
+                }
+                
+        
+                bool option2 = dp[i + 1][j];
+                
+                bool ans = option1 || option2;
+                
+                dp[i][j] = ans;
+            }
+        }
+        
+        return dp[0][sum];
+    }
+    
+    bool isSubsetSum(vector<int>& arr, int sum) {
+        // code here
+        // bool ans = usingRecurssion(arr , sum , 0);
+        
+        int n = arr.size();
+        
+        // vector<vector<int>> dp(n + 1, vector<int> (sum + 1 , -1));
+        
+        // bool ans = Memoization(arr , 0 , sum , dp);
+        
+        bool ans = Tabulation(arr , sum);
+        
+        return ans;
+    }
+};
