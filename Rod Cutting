@@ -1,0 +1,115 @@
+class Solution {
+  public:
+    int usingRecurssion(vector<int> &price , int n){
+        
+        if(n == 0){
+           return 0;
+        }
+        
+        int ans = INT_MIN;
+        
+        for(int i = 0 ; i < price.size() ; i++){
+            
+            int cutLength = i + 1;
+            
+            if(n - cutLength >= 0){
+                
+                int key = usingRecurssion(price , n - cutLength);
+                
+                if(key != INT_MIN){
+                    
+                    int option1 = price[i] + key;
+                    
+                    ans = max(ans , option1);
+                }
+            }
+        }
+        
+        return ans;
+    }
+    
+    int Memoization(vector<int> &price , int n , vector<int> &dp){
+        
+        if(n == 0){
+           return 0;
+        }
+        
+        if(dp[n] != -1){
+            return dp[n];
+        }
+        
+        int ans = INT_MIN;
+        
+        for(int i = 0 ; i < price.size() ; i++){
+            
+            int cutLength = i + 1;
+            
+            if(n - cutLength >= 0){
+                
+                int key = Memoization(price , n - cutLength , dp);
+                
+                if(key != INT_MIN){
+                    
+                    int option1 = price[i] + key;
+                    
+                    ans = max(ans , option1);
+                }
+            }
+        }
+         
+        dp[n] = ans;
+         
+        return dp[n];
+    }
+    
+    int Tabulation(vector<int> &price){
+        int n = price.size();
+        
+        vector<int> dp(n + 1 , 0);
+        
+        for(int j = 1 ; j <=n ; j++){
+            
+            int ans = INT_MIN;
+             
+            for(int i = 0 ; i < price.size() ; i++){
+            
+                int cutLength = i + 1;
+                
+                if(j - cutLength >= 0){
+                    
+                    int key = dp[j - cutLength];
+                    
+                    if(key != INT_MIN){
+                        
+                        int option1 = price[i] + key;
+                        
+                        ans = max(ans , option1);
+                    }
+                }
+            }
+             
+            dp[j] = ans;
+        }
+        
+        return dp[n];
+    }
+    
+    int cutRod(vector<int> &price) {
+        // code here
+        int n = price.size();
+        
+        // int ans = usingRecurssion(price , n);
+        
+        vector<int> dp(n + 1 , -1);
+        
+        // int ans = Memoization(price , n , dp);
+        
+        int ans = Tabulation(price);
+        
+        if(ans == INT_MIN){
+            return -1;
+        }
+        
+        return ans;
+    }
+};
