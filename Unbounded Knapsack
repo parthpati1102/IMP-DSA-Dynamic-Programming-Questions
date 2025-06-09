@@ -1,0 +1,88 @@
+class Solution {
+  public:
+    int usingRecurssion(vector<int> &val , vector<int> &wt , int capacity){
+        
+        if(capacity == 0 ){
+            return 0;
+        }
+        
+        int ans = 0;
+        
+        for(int i = 0 ; i < val.size() ; i++){
+            if(capacity - wt[i] >= 0){
+                int key = usingRecurssion(val , wt , capacity - wt[i]);
+                
+                int option1 = val[i] + key;
+                    
+                ans = max(ans , option1);
+            }
+        }
+        
+        return ans;
+    }
+    
+    int Memoization(vector<int> &val , vector<int> &wt , int capacity , vector<int> &dp){
+        
+        if(capacity == 0 ){
+            return 0;
+        }
+        
+        if(dp[capacity] != -1){
+           return dp[capacity];
+        }
+        
+        int ans = 0;
+        
+        for(int i = 0 ; i < val.size() ; i++){
+            if(capacity - wt[i] >= 0){
+                int key = Memoization(val , wt , capacity - wt[i] , dp);
+                
+                int option1 = val[i] + key;
+                    
+                ans = max(ans , option1);
+            }
+        }
+        
+        dp[capacity] = ans;
+        
+        return dp[capacity];
+    }
+    
+    int Tabulation(vector<int> &val , vector<int> &wt , int capacity){
+        vector<int> dp(capacity + 1 , -1);
+        
+        dp[0] = 0;
+        
+        for(int j = 1 ; j <= capacity ; j++){
+            
+            int ans = 0;
+        
+            for(int i = 0 ; i < val.size() ; i++){
+                if(j - wt[i] >= 0){
+                    int key = dp[j - wt[i]];
+                    
+                    int option1 = val[i] + key;
+                        
+                    ans = max(ans , option1);
+                }
+            }
+            
+            dp[j] = ans;
+        }
+        
+        return dp[capacity];
+    }
+    
+    int knapSack(vector<int>& val, vector<int>& wt, int capacity) {
+        // code here
+        // int ans = usingRecurssion(val , wt , capacity);
+        
+        // vector<int> dp(capacity + 1 , -1);
+        
+        // int ans = Memoization(val , wt , capacity , dp);
+        
+        int ans = Tabulation(val , wt , capacity);
+        
+        return ans;
+    }
+};
