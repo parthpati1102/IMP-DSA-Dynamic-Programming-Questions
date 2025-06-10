@@ -1,0 +1,134 @@
+class Solution {
+public:
+    bool usingRecurssion(int index1 , int index2 , string &s , string &p){
+        if(index1 >= s.size() && index2 >= p.size()){
+            return true;
+        }
+
+        if(index1 < s.size() && index2 >= p.size()){
+           return false;
+        }
+
+        if(index1 >= s.size() && index2 < p.size()){
+           for(int i = index2 ; i < p.size(); i++){
+                if(p[i] != '*'){
+                 return false;
+                } 
+            }
+
+            return true;
+        }
+
+        int ans = 0;
+
+        if(s[index1] == p[index2] || p[index2] == '?'){
+            ans = usingRecurssion(index1 + 1 , index2 + 1 , s , p);
+        }
+
+        if(p[index2] == '*'){
+            int option1 = usingRecurssion(index1 + 1 , index2 , s , p);
+
+            int option2 = usingRecurssion(index1 , index2 + 1 , s , p);
+
+            ans = option1 || option2;
+        }
+
+        return ans;
+    }
+
+    bool Memoization(int index1 , int index2 , string &s , string &p , vector<vector<int>> &dp){
+        if(index1 >= s.size() && index2 >= p.size()){
+            return true;
+        }
+
+        if(index1 < s.size() && index2 >= p.size()){
+           return false;
+        }
+
+        if(index1 >= s.size() && index2 < p.size()){
+           for(int i = index2 ; i < p.size(); i++){
+                if(p[i] != '*'){
+                 return false;
+                } 
+            }
+
+            return true;
+        }
+
+        if(dp[index1][index2] != -1){
+            return dp[index1][index2];
+        }
+
+        int ans = 0;
+
+        if(s[index1] == p[index2] || p[index2] == '?'){
+            ans = Memoization(index1 + 1 , index2 + 1 , s , p , dp);
+        }
+
+        if(p[index2] == '*'){
+            int option1 = Memoization(index1 + 1 , index2 , s , p , dp);
+
+            int option2 = Memoization(index1 , index2 + 1 , s , p , dp);
+
+            ans = option1 || option2;
+        }
+        
+        dp[index1][index2] = ans;
+
+        return ans;
+    }
+
+    bool Tabulation(string &s , string &p){
+        int n1 = s.size();
+        int n2 = p.size();
+
+        vector<vector<int>> dp(n1 + 1 , vector<int>(n2 + 1 , 0));
+         
+        dp[n1][n2] = 1;
+
+        for (int j = n2 - 1; j >= 0; j--) {
+            if (p[j] == '*') {
+                dp[n1][j] = dp[n1][j + 1]; 
+            } else {
+                dp[n1][j] = 0; 
+            }
+        }
+
+         for(int i = n1 - 1 ; i >= 0 ; i--){
+            for(int j = n2 - 1 ; j >= 0 ; j--){
+                int ans = 0;
+
+                if(s[i] == p[j] || p[j] == '?'){
+                    ans = dp[i + 1][j + 1];
+                }
+
+                if(p[j] == '*'){
+                    int option1 = dp[i + 1][j];
+
+                    int option2 = dp[i][j + 1];
+
+                    ans = option1 || option2;
+                }
+                
+                dp[i][j] = ans;
+            }
+        }
+
+        return dp[0][0];
+    }
+
+    bool isMatch(string s, string p) {
+        // bool ans = usingRecurssion(0  , 0 , s , p);
+        
+        // int n1 = s.size();
+        // int n2 = p.size();
+
+        // vector<vector<int>> dp(n1 + 1 , vector<int>(n2 + 1 , -1));
+
+        // bool ans = Memoization(0  , 0 , s , p , dp);
+
+        int ans = Tabulation(s , p);
+
+        return ans;
+    }
+};
