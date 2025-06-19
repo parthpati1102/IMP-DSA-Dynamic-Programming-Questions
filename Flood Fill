@@ -1,0 +1,42 @@
+class Solution {
+public:
+   bool check(vector<vector<int>> &ans , int oldColor , int  newdx , int newdy){
+       if(newdx >= 0 && newdx < ans.size() && newdy >= 0 && newdy < ans[0].size() && ans[newdx][newdy] == oldColor){
+            return true;
+       }
+
+       return false;
+   }
+
+   void usingDFS(vector<vector<int>>& image , vector<vector<int>> &ans , int oldColor , int newColor , int sr , int sc){
+       
+       ans[sr][sc] = newColor;
+
+       // for checking UP Right Down Left
+       int dx[] = {-1 , 0 , 1 , 0};
+       int dy[] = {0 , 1 , 0 , -1};
+
+       for(int i = 0 ; i < 4 ; i++){
+          int newdx = sr + dx[i];
+          int newdy = sc + dy[i];
+
+          if(check(ans , oldColor , newdx , newdy)){
+            usingDFS(image , ans , oldColor  , newColor ,  newdx , newdy);
+          }
+       }
+   }
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        vector<vector<int>> ans = image;
+
+        int oldColor = image[sr][sc];
+        int newColor = color;
+
+        if(oldColor == newColor){
+            return image;
+        }
+
+        usingDFS(image , ans , oldColor , newColor , sr , sc);
+
+        return ans;
+    }
+};
