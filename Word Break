@@ -1,44 +1,95 @@
-
-//Using 1D DP
 class Solution {
 public:
-    bool checkDict(string &str , vector<string>& wordDict){
-        for(auto pr : wordDict){
-            if(pr == str){
+    bool check(string &str , vector<string> &wordDict){
+        for(auto word : wordDict){
+            if(word == str){
                 return true;
             }
         }
 
         return false;
     }
-    bool solve(string &s , vector<string>& wordDict , int start , vector<int> &dp){
-        if(start >= s.size()){
-            return true;
-        }
 
-        if(dp[start] != -1){
-            return dp[start];
-        }
-        bool check = false;
-        string str = "";
+    // bool usingRecurssion(int index , string &s , vector<string> &wordDict){
+    //     if(index >= s.size()){
+    //         return true;
+    //     }
 
-        for(int i  = start ; i < s.size() ; i++){
-            str += s[i];
-            
-            if(checkDict(str , wordDict)){
-                check =  check || solve(s , wordDict , i + 1 , dp);
-            }
-        }
+    //     bool ans = false;
+
+    //     string str = "";
+    //     for(int i = index ; i < s.size() ; i++){
+
+    //         str += s[i];
+
+    //         if(check(str , wordDict)){
+    //             ans = ans || usingRecurssion( i + 1 , s , wordDict);
+    //         }
+    //     }
+
+    //     return ans;
+    // }
+
+    // bool Memoization(int index , string &s , vector<string> &wordDict , vector<int> &dp){
+    //     if(index >= s.size()){
+    //         return true;
+    //     }
         
-        dp[start] = check;
+    //     if(dp[index] != -1){
+    //         return dp[index];
+    //     }
 
-        return dp[start];
+    //     bool ans = false;
+    //     string str = "";
+
+    //     for(int i = index ; i < s.size() ; i++){
+
+    //         str += s[i];
+
+    //         if(check(str , wordDict)){
+    //             ans = ans || Memoization( i + 1 , s , wordDict , dp);
+    //         }
+    //     }
+        
+    //     dp[index] = ans;
+
+    //     return dp[index];
+    // }
+
+    bool Tabulation(string &s , vector<string> &wordDict){
+        int n = s.size();
+        vector<int> dp(n + 1 , 0);
+
+        dp[n] = 1;
+
+        for(int j = n - 1 ; j >= 0 ; j--){
+            bool ans = false;
+            string str = "";
+
+            for(int i = j ; i < s.size() ; i++){
+
+                str += s[i];
+
+                if(check(str , wordDict)){
+                    ans = ans || dp[i + 1];
+                }
+            }
+            
+            dp[j] = ans;
+        }
+
+        return dp[0];
     }
     bool wordBreak(string s, vector<string>& wordDict) {
-        int  n = s.size();
+        
+        // bool ans = usingRecurssion(0 , s , wordDict);
+        
+        // int n = s.size();
+        // vector<int> dp(n + 1 , -1);
 
-        vector<int> dp(n + 1 , -1);
-        bool ans = solve(s , wordDict , 0  , dp);
+        // bool ans = Memoization(0 , s , wordDict , dp);
+         
+        bool ans = Tabulation(s , wordDict);
 
         return ans;
     }
